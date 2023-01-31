@@ -18,12 +18,14 @@ const DraftModifier = require('DraftModifier');
 const EditorState = require('EditorState');
 const UserAgent = require('UserAgent');
 
-const editOnInput = require('editOnInput');
 const getEntityKeyForSelection = require('getEntityKeyForSelection');
 const isEventHandled = require('isEventHandled');
 const isSelectionAtLeafStart = require('isSelectionAtLeafStart');
 const nullthrows = require('nullthrows');
-const setImmediate = require('setImmediate');
+
+// setImmediate has a bug on modern browsers 
+// const setImmediate = require('setImmediate');
+// const editOnInput = require('editOnInput');
 
 // When nothing is focused, Firefox regards two characters, `'` and `/`, as
 // commands that should open and focus the "quickfind" search bar. This should
@@ -279,11 +281,13 @@ function editOnBeforeInput(
   // tasks from the web page get on the way (mimicking what would happen if the
   // browser fired both the beforeInput and input events). Calling our usual
   // input handler does the trick.
-  if (isIE) {
-    setImmediate(() => {
-      editOnInput(editor, null);
-    });
-  }
+  //
+  // setImmediate has a bug on modern browsers, and no one uses IE anymore
+  // if (isIE) {
+  //   setImmediate(() => {
+  //     editOnInput(editor, null);
+  //   });
+  // }
 }
 
 module.exports = editOnBeforeInput;
